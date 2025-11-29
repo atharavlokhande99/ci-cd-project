@@ -1,6 +1,5 @@
 name: Maven CI
 
-# Trigger workflow on push or PR to main branch
 on:
   push:
     branches: [ "main" ]
@@ -12,19 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
+          cache: maven
 
-      # Step 3: Build project with Maven inside 'app' folder
       - name: Build with Maven
         run: mvn clean install
-        working-directory: ./app  where to add this code
+        working-directory: app
