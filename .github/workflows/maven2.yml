@@ -1,4 +1,4 @@
-name:  CI CD PIPELINE AUTOMATION
+name: CI CD PIPELINE AUTOMATION
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
+
   compile:
     runs-on: ubuntu-latest
 
@@ -23,4 +24,32 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./app
-        run: mvn -B package --file pom.xml
+        run: mvn compile
+
+
+  security-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget gnupg -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
+
+      - name: Trivy FS Scan
+        run: trivy fs --format table -o fs-report.json .
+
+      # Install Gitleaks
+      - name: Install Gitleaks
+        run: sudo apt-get update && sudo apt-get install gitleaks -y
+
+      - name: Gitleaks Code Scan
+        run: gitleaks detect -s . -r gitleaks-report.json -f json
