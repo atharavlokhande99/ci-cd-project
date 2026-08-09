@@ -1,22 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ci-cd-demo
+  name: ci-cd-pipeline-system
+  labels:
+    app: ci-cd-pipeline-system
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: ci-cd-demo
+      app: ci-cd-pipeline-system
   template:
     metadata:
       labels:
-        app: ci-cd-demo
+        app: ci-cd-pipeline-system
     spec:
       containers:
-      - name: app
-        image: <kartikmg>/ci-cd-demo:latest
+      - name: ci-cd-pipeline-system
+        image: atharavlokhande99/ci-cd-pipeline-system:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 8081
         env:
+        - name: PORT
+          value: "8081"
         - name: APP_VERSION
           value: "1.0.0"

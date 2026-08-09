@@ -1,1 +1,7 @@
+com\cicd\server\PipelineServer$StaticFileHandler.class
+com\cicd\server\PipelineServer$StatusHandler.class
+com\cicd\server\PipelineServer$TriggerBuildHandler.class
 com\example\App.class
+com\cicd\server\PipelineServer.class
+com\cicd\App.class
+com\cicd\server\PipelineServer$HealthHandler.class

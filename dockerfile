@@ -1,8 +1,12 @@
-FROM node:18-alpine
-WORKDIR /usr/src/app
-COPY app/package*.json ./
-RUN npm ci --only=production
-COPY app/ .
-ENV PORT=3000
-EXPOSE 3000
-CMD ["node", "index.js"]
+# Multi-Stage Docker Build for Java 17/21 Maven Application
+FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+WORKDIR /app
+COPY app/pom.xml ./
+COPY app/src ./src
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "app.jar"]
